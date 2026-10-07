@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # The deployed artifact bundles no package-manager deps (the one third-party
+  # library, qrcode-generator, is embedded inline and CSP-hash-pinned; the
+  # Lambdas use only the Python stdlib + AWS-provided boto3). The only moving
+  # dependency surface is GitHub Actions used in CI below.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci"

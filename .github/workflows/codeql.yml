@@ -1,0 +1,34 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: "27 4 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ "python", "javascript" ]
+    steps:
+      # NOTE (OSS hardening): pin these to full commit SHAs before merge.
+      # Dependabot (github-actions, above) will raise the pin PRs automatically.
+      - name: Checkout
+        uses: actions/checkout@v4            # TODO pin to SHA
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3   # TODO pin to SHA
+        with:
+          languages: ${{ matrix.language }}
+      - name: Analyze
+        uses: github/codeql-action/analyze@v3 # TODO pin to SHA
