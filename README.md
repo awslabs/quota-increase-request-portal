@@ -4,8 +4,7 @@ Self-contained CloudFormation template + browser frontend for submitting
 AWS Service Quota increase requests. The full UI, backend, and supporting
 assets are embedded in the template — no external artifacts required.
 
-**Latest version:** v3.36 (2026-07-15). See the changelog at the bottom
-of this file for the full release history.
+See [`CHANGELOG.md`](CHANGELOG.md) for the release history.
 
 ---
 
@@ -48,7 +47,7 @@ quota-tool-package/
 ├── lambda-deployer/
 │   ├── quota-tool-deployer.zip            ← exact running code (737 bytes)
 │   └── index.py                           ← unzipped source — custom-resource HTML deployer
-├── lambda-cf-waf/                          ← (NEW v3.11) docs for the inline custom-resource
+├── lambda-cf-waf/                          ← docs for the inline custom-resource
 │   ├── index.py                           ← creates / updates / deletes the CloudFront WAF (us-east-1)
 │   └── README.md
 └── static-site/
@@ -188,7 +187,7 @@ The template is fully self-contained. Both Lambda functions are inlined as `ZipF
 
 **Option 2 — Just re-push the static site (if you want to update HTML without stack update):**
 
-⚠️ As of v3.9, `static-site/index.html` contains TWO placeholders that the deployer Lambda substitutes at stack-create time: `%%API_URL%%` (the API Gateway URL) and `%%COGNITO_CONFIG%%` (a JSON object with `region`/`userPoolId`/`clientId`/`identityPoolId`). The static file is not directly usable without both substitutions. **For v3.9+, use Option 1 (stack create/update) — Option 2 is impractical because the Cognito config JSON has to be constructed from four separate stack outputs and is regenerated on stack updates.**
+⚠️ `static-site/index.html` contains TWO placeholders that the deployer Lambda substitutes at stack-create time: `%%API_URL%%` (the API Gateway URL) and `%%COGNITO_CONFIG%%` (a JSON object with `region`/`userPoolId`/`clientId`/`identityPoolId`). The static file is not directly usable without both substitutions. **Use Option 1 (stack create/update) — Option 2 is impractical because the Cognito config JSON has to be constructed from four separate stack outputs and is regenerated on stack updates.**
 
 ```bash
 # For the original account (no substitution needed):
@@ -212,35 +211,3 @@ cd lambda-handler && zip -r quota-tool-handler.zip index.py && \
 aws lambda update-function-code --function-name quota-tool-handler \
     --zip-file fileb://quota-tool-handler.zip --region us-east-1
 ```
-
----
-
-
-## Changelog
-
-This is the public changelog. Internal build-and-audit notes — including the methodology and dataset provenance used to derive the question bank from historical support cases — are retained internally and are not part of this repository.
-
-### v3.36 (2026-07-15)
-- Customer-facing hint scrub: reworded question hints and UI text to address the user directly, and removed internal engineering phrasing.
-
-### v3.35 (2026-06-30)
-- Quota routing fix: high-tier questionnaires are now routed to the correct quota.
-
-### v3.18–v3.33 (2026-06-12)
-- Major expansion and refinement of the question bank across the top ~40 services, informed by analysis of historical Service Quotas limit-increase support cases. Added hard-cap notices, account-history pre-screens, workload-context questions, and per-quota field labels (for example, Bedrock model and limit-type fields, and the FSx field template). Overall question coverage grew substantially.
-
-### v3.13–v3.17 (2026-06-10 – 2026-06-12)
-- Regression fixes; MFA enrollment UX (forced enrollment and QR code); build-pipeline fix.
-- **v3.13 and v3.14 are deprecated — deploy v3.15 or later.**
-
-### v3.8–v3.12 (2026-05-15 – 2026-06-03)
-- Customer-voice rewrite of question hints and UI copy.
-- MFA support (Amazon Cognito).
-- AppSec hardening: Content-Security-Policy tightened to drop `'unsafe-inline'` using hashed inline script/style blocks; HSTS and other security response headers added via the CloudFront response-headers policy.
-
-### v3.1–v3.7 (2026-05-12)
-- Per-service question bank and hints.
-- CTI routing map so submitted cases are assigned to the correct service team.
-
-### v3.0 and earlier (2026-04-29 – 2026-05-01)
-- Initial release: a multi-region Service Quota increase request tool. The user selects a quota and one or more regions, provides justification once, and the tool submits a single consolidated AWS Support case covering all selected regions.
