@@ -20,7 +20,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ "python", "javascript" ]
+        # Python only: the three Lambda handlers (src/**/index.py) are the
+        # analyzable source. The client-side JavaScript ships as a gzip+base64
+        # blob embedded in the CloudFormation template, so there are no .js/.ts
+        # files on disk for CodeQL to scan -- a "javascript" job would fail with
+        # "No source code was seen during the build".
+        language: [ "python" ]
     steps:
       # NOTE (OSS hardening): pin these to full commit SHAs before merge.
       # Dependabot (github-actions, above) will raise the pin PRs automatically.
