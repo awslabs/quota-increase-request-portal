@@ -47,7 +47,7 @@ quota-tool-package/
 ├── lambda-deployer/
 │   ├── quota-tool-deployer.zip            ← exact running code (737 bytes)
 │   └── index.py                           ← unzipped source — custom-resource HTML deployer
-├── lambda-cf-waf/                          ← (NEW v3.11) docs for the inline custom-resource
+├── lambda-cf-waf/                          ← docs for the inline custom-resource
 │   ├── index.py                           ← creates / updates / deletes the CloudFront WAF (us-east-1)
 │   └── README.md
 └── static-site/
@@ -187,7 +187,7 @@ The template is fully self-contained. Both Lambda functions are inlined as `ZipF
 
 **Option 2 — Just re-push the static site (if you want to update HTML without stack update):**
 
-⚠️ As of v3.9, `static-site/index.html` contains TWO placeholders that the deployer Lambda substitutes at stack-create time: `%%API_URL%%` (the API Gateway URL) and `%%COGNITO_CONFIG%%` (a JSON object with `region`/`userPoolId`/`clientId`/`identityPoolId`). The static file is not directly usable without both substitutions. **For v3.9+, use Option 1 (stack create/update) — Option 2 is impractical because the Cognito config JSON has to be constructed from four separate stack outputs and is regenerated on stack updates.**
+⚠️ `static-site/index.html` contains TWO placeholders that the deployer Lambda substitutes at stack-create time: `%%API_URL%%` (the API Gateway URL) and `%%COGNITO_CONFIG%%` (a JSON object with `region`/`userPoolId`/`clientId`/`identityPoolId`). The static file is not directly usable without both substitutions. **Use Option 1 (stack create/update) — Option 2 is impractical because the Cognito config JSON has to be constructed from four separate stack outputs and is regenerated on stack updates.**
 
 ```bash
 # For the original account (no substitution needed):
